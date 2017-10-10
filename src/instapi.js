@@ -53,6 +53,12 @@ const register = async (username, password) => {
   return registration;
 };
 
+const send = async (username, token, userId, message) => {
+  const { device, storage } = getDeviceStorage(username, token, true);
+  const session = await Client.Session.create(device, storage);
+  Client.Thread.configureText(session, userId, message);
+};
+
 // Read a specific inbox thread retrieved from user & token
 const read = async (username, token, threadId) => {
   const { device, storage } = getDeviceStorage(username, token, true);
@@ -65,4 +71,5 @@ const read = async (username, token, threadId) => {
 export {
   register,
   read,
+  send,
 };

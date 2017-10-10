@@ -6,7 +6,7 @@ import { router, get, post } from 'microrouter';
 
 import { V1 as Client } from 'instagram-private-api';
 
-import { register, read } from './instapi';
+import { register, read, send } from './instapi';
 
 const { CookieNotValidError, AuthenticationError } = Client.Exceptions;
 
@@ -100,6 +100,37 @@ const handleRead = async (req) => {
   return { data: threadItems };
 };
 
+const handleSend = async (req) => {
+
+  let params;
+  try {
+    params = await json(req);
+  } catch (e) {
+    return paramError;
+  }
+  const { user, token, userId, message} = params;
+  if (!user || !token || !userId || !message) return paramError;
+  try {
+    await send(user, token, userId, message);
+  } catch (e) {
+    if (e instanceof CookieNotValidError || e instanceof AuthenticationError) {
+      // Our data is stale
+      removeCookie(user, token);
+    }
+    return {
+      error: {
+        name: e.name || e,
+        message: e.message || e,
+      },
+    };
+  }
+  return {
+    data: {
+      success: true,
+    },
+  };
+};
+
 // Erase auth
 const handleLogout = async (req) => {
   let params;
@@ -136,6 +167,7 @@ const server = micro(compose(
 )(router(get('/', handleBase),
   post('/register', handleRegister),
   post('/read/:id', handleRead),
+  post('/send', handleSend),
   post('/logout', handleLogout)
 )));
 
