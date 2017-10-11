@@ -101,17 +101,16 @@ const handleRead = async (req) => {
 };
 
 const handleSend = async (req) => {
-
   let params;
   try {
     params = await json(req);
   } catch (e) {
     return paramError;
   }
-  const { user, token, userId, message} = params;
-  if (!user || !token || !userId || !message) return paramError;
+  const { user, token, accountId, message } = params;
+  if (!user || !token || !accountId || !message) return paramError;
   try {
-    await send(user, token, userId, message);
+    await send(user, token, accountId, message);
   } catch (e) {
     if (e instanceof CookieNotValidError || e instanceof AuthenticationError) {
       // Our data is stale

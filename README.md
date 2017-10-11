@@ -144,6 +144,35 @@ You will need the feed id of the conversation you want to retrieve for ex `data.
 }
 ```
 
+Method | Endpoint  | Query Parameters
+------------ | ------------- | -------------
+POST | /send | `{"user":"[user.nameFromPreviousCall]","token":"[tokenFromPreviousCall]", "accountId":"[accountId.receives.message]", "message":"[message]"}`
+
+You will need also accounts[0].id from register response
+
+#### Request
+ Eg: From your frontend or else.
+ ```javascript
+ fetch('http://localhost:3000/send', {
+   method: 'post',
+   headers: {
+     'Accept': 'application/json, text/plain, */*',
+     'Content-Type': 'application/json'
+   },
+   body: JSON.stringify({user:'TheUser',token:'theTokenFromStep1', "accountId":"1557082241", "message":"Test message"})
+ }).then(res=>res.json())
+   .then(res => console.log(res));
+ ```
+#### Response
+
+```json
+{
+  "data": {
+    "success": true
+  }
+}
+```
+
 #### Logging out
 Method | Endpoint  | Query Parameters
 ------------ | ------------- | -------------

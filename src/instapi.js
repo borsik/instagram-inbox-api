@@ -53,10 +53,10 @@ const register = async (username, password) => {
   return registration;
 };
 
-const send = async (username, token, userId, message) => {
+const send = async (username, token, accountId, message) => {
   const { device, storage } = getDeviceStorage(username, token, true);
   const session = await Client.Session.create(device, storage);
-  Client.Thread.configureText(session, userId, message);
+  Client.Thread.configureText(session, accountId, message);
 };
 
 // Read a specific inbox thread retrieved from user & token
